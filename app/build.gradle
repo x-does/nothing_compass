@@ -1,0 +1,38 @@
+plugins { id 'com.android.application' }
+android {
+    namespace 'dev.nothingthings.glyphnorth'
+    compileSdk 36
+    defaultConfig {
+        applicationId 'dev.nothingthings.glyphnorth'
+        minSdk 34
+        targetSdk 36
+        versionCode 7
+        versionName '1.6'
+    }
+    def signingFile = rootProject.file('keystore.properties')
+    if (signingFile.exists()) {
+        def credentials = new Properties()
+        signingFile.withInputStream { credentials.load(it) }
+        signingConfigs {
+            release {
+                storeFile rootProject.file(credentials['storeFile'])
+                storePassword credentials['storePassword']
+                keyAlias credentials['keyAlias']
+                keyPassword credentials['keyPassword']
+            }
+        }
+    }
+    buildTypes {
+        release {
+            if (signingFile.exists()) signingConfig signingConfigs.release
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions { sourceCompatibility JavaVersion.VERSION_17; targetCompatibility JavaVersion.VERSION_17 }
+}
+dependencies {
+    implementation files('libs/glyph-matrix-sdk-2.0.aar')
+    testImplementation 'junit:junit:4.13.2'
+}

@@ -1,0 +1,9 @@
+# v1.4: separate live ownership from system toy binding
+
+The user's v1.3 report identifies `System toy` output during a live session, with actual AOD callbacks. v1.3 used a `toy` binding flag to select `setMatrixFrame()` even if a live foreground session had been started. It also closed app output on every active tile selection and every 15 seconds (when not toy-bound). Those operations could disrupt output and did not establish visible-display health.
+
+v1.4 always selects `setAppMatrixFrame()` for explicit live sessions, reserving `setMatrixFrame()` for toy-only sessions. It removes periodic close/register and unconditional reconnect on mode switching. SDK disconnect/error retries remain. Live sessions no longer restart their sensors on the system toy's minute AOD events. Off explicitly shuts down SDK ownership; callbacks from old connections are rejected. Last-frame and sensor timestamps let diagnostics distinguish a stalled producer from silent vendor display suppression. Sensor silence over 10 seconds triggers resampling.
+
+For the live/tile acceptance test, **deselect Glyph North as the Always-on Glyph Toy** in Nothing Settings. System-managed toys have higher priority than app output; an SDK call succeeding cannot override that policy. v1.4 does not change this vendor priority. Try at least 10 minutes screen-off, notifications, and multiple Off → Time → Compass cycles. If frozen, open the app and copy diagnostics before restarting so frame/sample ages are preserved.
+
+The main-thread SDK calls and vendor service cannot be ruled out as further causes without logs. Timeout behavior is undocumented in the README despite the AAR exposing `setGlyphMatrixTimeout(boolean)`; no guessed timeout flag is applied. Build/unit tests cannot confirm long-running behavior on the handset.

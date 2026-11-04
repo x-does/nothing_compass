@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Glyph North</string>
+    <string name="toy_summary">A rear-facing arrow pointing to magnetic north. Hold the phone flat.</string>
+    <color name="icon_background">#101113</color>
+    <style name="AppTheme" parent="android:style/Theme.Material.NoActionBar">
+        <item name="android:fontFamily">sans</item>
+        <item name="android:colorAccent">#E9FF89</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowBackground">#101113</item>
+    </style>
+</resources>
